@@ -1,6 +1,5 @@
-
 import logging
-import conf
+import config
 import struct
 import binascii
 import asyncio
@@ -24,7 +23,7 @@ class Client(Avatar):
 
         try:
             while True:
-                raw_bytes = await reader.read(conf.BUFFER)
+                raw_bytes = await reader.read(config.BUFFER)
                 if not raw_bytes:
                     break
 
@@ -51,7 +50,7 @@ class Client(Avatar):
                 logging.debug(f"От клиента: {raw_data}, {m_type}")
             final_data = struct.pack(">b", m_type) + encoder.encode_dict(raw_data)
 
-            header = struct.pack(">iB", len(final_data) + conf.HEADER_LENGTH, conf.MASK)
+            header = struct.pack(">iB", len(final_data) + config.HEADER_LENGTH, config.MASK)
             header += struct.pack(">I", binascii.crc32(final_data))
 
             final_data = header + final_data
